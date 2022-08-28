@@ -32,6 +32,7 @@ export class ImportCategoryUseCase {
           });
         })
         .on("end", () => {
+          fs.promises.unlink(file.path);
           resolve(this.categories);
         })
         .on("error", (err) => {
