@@ -6,6 +6,7 @@ export class ImportCategoryController {
 
   async handle(request: Request, response: Response) {
     const { file } = request;
+    if (!file) return response.status(400).json({ message: "CSV not found" });
     const enabledCategories = await this.importCategoryUseCase.loadCategories(
       file
     );
