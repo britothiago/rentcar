@@ -1,6 +1,21 @@
-version: "3.8"
+version: "3"
 
 services:
+  database_rentcar: 
+    image: postgres
+    container_name: database_rentcar
+    restart: always
+    ports:
+      - 5000:5432
+    environment: 
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=ignite
+      - POSTGRES_DB=rentcar
+    volumes:
+     - pgdata:/data/postgres
+    networks:
+      - my-network
+    
   app:
     build: .
     container_name: rentcar
@@ -8,3 +23,15 @@ services:
       - 3333:3333
     volumes:
       - .:/usr/appNode
+    networks:
+      - my-network
+    depends_on:
+      - database_rentcar
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  my-network:
+    driver: bridge
