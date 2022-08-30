@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "typeorm:run": "ts-node-dev ./node_modules/typeorm/cli.js -d src/database/index.ts",
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts"
   },
   "keywords": [],

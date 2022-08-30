@@ -1,10 +1,12 @@
 import express from "express";
 import swaggerUI from "swagger-ui-express";
+
+import "./database";
+
 import { categoriesRoutes } from "./routes/categories.routes";
 import { healthcheckRoutes } from "./routes/healthcheck.routes";
 import { specificationsRoutes } from "./routes/specifications.routes";
 
-import "./database";
 import swaggerFile from "./swagger.json";
 
 const app = express();
