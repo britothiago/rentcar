@@ -2,6 +2,7 @@ import express from "express";
 import swaggerUI from "swagger-ui-express";
 
 import "./database";
+import "./shared/container";
 
 import { categoriesRoutes } from "./routes/categories.routes";
 import { healthcheckRoutes } from "./routes/healthcheck.routes";
