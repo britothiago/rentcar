@@ -2,6 +2,7 @@ import fs from "fs";
 import { parse } from "csv-parse";
 import { CategoriesRepository } from "../../repositories/implementarions/CategoriesRepository";
 import { inject, injectable } from "tsyringe";
+import { AppError } from "../../../../errors/AppError";
 
 interface IImportCategories {
   name: string;
@@ -64,8 +65,7 @@ export class ImportCategoryUseCase {
       }
     });
 
-    return this.categories.length
-      ? this.categories
-      : { message: "No data imported. All categories already exists" };
+    if (this.categories.length) return this.categories;
+    else throw new AppError("No data imported. All categories already exists");
   }
 }
