@@ -7,6 +7,7 @@ import "./shared/container";
 import { categoriesRoutes } from "./routes/categories.routes";
 import { healthcheckRoutes } from "./routes/healthcheck.routes";
 import { specificationsRoutes } from "./routes/specifications.routes";
+import { accountsRoutes } from "./routes/accounts.routes";
 
 import swaggerFile from "./swagger.json";
 
@@ -16,6 +17,7 @@ app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 
 app.use("/categories", categoriesRoutes);
 app.use("/specifications", specificationsRoutes);
+app.use("/accounts", accountsRoutes);
 app.use("/health", healthcheckRoutes);
 
 app.listen(3333);
