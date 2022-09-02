@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+dotenv.config();
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import swaggerUI from "swagger-ui-express";
@@ -13,16 +15,18 @@ import { accountsRoutes } from "./routes/accounts.routes";
 import swaggerFile from "./swagger.json";
 import { authenticateRoutes } from "./routes/authenticate.routes";
 import { AppError } from "./errors/AppError";
+import { isAuthenticated } from "./middlewares/isAuthenticated";
 
 const app = express();
 app.use(express.json());
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerFile));
+app.use("/health", healthcheckRoutes);
+app.use("/auth", authenticateRoutes);
 
+app.use(isAuthenticated);
 app.use("/categories", categoriesRoutes);
 app.use("/specifications", specificationsRoutes);
 app.use("/accounts", accountsRoutes);
-app.use("/health", healthcheckRoutes);
-app.use("/auth", authenticateRoutes);
 
 app.use(
   (

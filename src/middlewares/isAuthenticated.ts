@@ -20,6 +20,15 @@ export const isAuthenticated = async (
     const user = await usersRepository.findById(String(userId));
     if (!user) throw new AppError("Invalid token");
 
+    request.user = {
+      id: String(userId),
+      name: user.name,
+      avatar: user.avatar,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      driverLicense: user.driver_license,
+    };
+
     next();
   } catch (err) {
     throw new AppError("Invalid token", 500);

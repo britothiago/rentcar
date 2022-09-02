@@ -9,6 +9,7 @@ interface IRequest {
   email: string;
   password: string;
   driver_license: string;
+  avatar?: string;
 }
 
 interface IError {
@@ -27,6 +28,7 @@ export class CreateUserUseCase {
     email,
     name,
     password,
+    avatar,
   }: IRequest): Promise<User | IError> {
     if (!(await this.userRepository.findByEmail(email))) {
       const hashedPassword = await hash(password, 8);
@@ -35,6 +37,7 @@ export class CreateUserUseCase {
         email,
         name,
         password: hashedPassword,
+        avatar,
       });
       return user;
     }
