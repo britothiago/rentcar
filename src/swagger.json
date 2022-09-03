@@ -1,5 +1,19 @@
 {
   "openapi": "3.0.0",
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
   "info": {
     "title": "Rent Car documentation",
     "description": "This is an API Rent Car",
@@ -9,6 +23,140 @@
     }
   },
   "paths": {
+    "/health": {
+      "get": {
+        "tags": ["HealthCheck"],
+        "summary": "Get status of API health",
+        "description": "Get status of API health",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": ["Session"],
+        "summary": "Get token of authentication",
+        "description": "Create a new token of authentication by user and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                     "type": "string"
+                  }
+                },
+                "example": {
+                  "email": "some email",
+                  "password": "Some password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Get a valid token"
+          },
+          "400": {
+            "description": "Email or password incorrect"
+          }
+        }
+      }
+    },
+    "/accounts": {
+      "post": {
+        "tags": ["Accounts"],
+        "summary": "Create a new user with avatar",
+        "description": "Create a new user with a optional avatar",
+        "requestBody": {
+          "content": {
+            "multipart/form-data":{
+              "schema":{
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "driver_license": {
+                    "type": "string"
+                  },
+                  "isAdmin": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created"
+          },
+          "500": {
+            "description": "User already exists"
+          },
+          "400": {
+            "description": "File exceeds size limit"
+          }
+        }
+      },
+      "get": {
+       "tags": ["Accounts"],
+        "summary": "List all users",
+        "description": "List all users",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "idAdmin": {
+                        "type": "boolean"
+                      },
+                      "driver_license": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }      
+      }
+    },
     "/categories": {
       "post": {
         "tags": ["Category"],
@@ -52,23 +200,23 @@
           "200": {
             "description": "Success",
             "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": "string"
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
               }
             }
-          }
           }
         }
       }
@@ -162,6 +310,6 @@
           }
         }
       }
-    }
+    }    
   } 
 }

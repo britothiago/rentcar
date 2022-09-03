@@ -3,7 +3,6 @@ import fs from "fs";
 import { resolve } from "path";
 import { AppError } from "../errors/AppError";
 
-//AWS.config.loadFromPath("./credentials.json");
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_ACCESS_SECRET,
