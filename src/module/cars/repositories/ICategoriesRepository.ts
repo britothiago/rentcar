@@ -5,6 +5,10 @@ export interface ICreateCategoryDTO {
   description: string;
 }
 
+interface IError {
+  message: string;
+}
+
 export interface ICategoriesRepository {
   findByName(name: string): Promise<Category>;
   list(): Promise<Category[]>;

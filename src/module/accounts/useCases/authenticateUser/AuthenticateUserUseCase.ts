@@ -44,7 +44,8 @@ export class AuthenticateUserUseCase {
           token,
         };
       }
+    } else {
+      throw new AppError("Email or password incorrect");
     }
-    throw new AppError("Email or password incorrect");
   }
 }
