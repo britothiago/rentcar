@@ -26,35 +26,40 @@ export class CarsRepository implements ICarsRepository {
     name,
     available,
   }: IRequest): Promise<Car[]> {
-    if (name)
+    if (name) {
       return this.repository.find({
         where: {
           name: name,
           available: true,
         },
       });
+    }
 
-    if (available)
+    if (available) {
       return this.repository.find({
         where: {
           available: available,
         },
       });
+    }
 
-    if (category_id)
+    if (category_id) {
       return this.repository.find({
         where: {
           category_id: category_id,
           available: true,
         },
       });
-    if (brand)
+    }
+
+    if (brand) {
       return this.repository.find({
         where: {
           brand: brand,
           available: true,
         },
       });
+    }
 
     return await this.repository.find({
       where: {
