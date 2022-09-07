@@ -5,7 +5,6 @@ import {
   ICategoriesRepository,
   ICreateCategoryDTO,
 } from "../ICategoriesRepository";
-
 export class CategoriesRepository implements ICategoriesRepository {
   private repository: Repository<Category>;
 

@@ -8,11 +8,24 @@ export interface ICreateCarDTO {
   fine_amount: number;
   brand: string;
   category_id: string;
+  available?: boolean;
+}
+
+interface ICreateCarOptionalDTO {
+  category_id?: string;
+  brand?: string;
+  name?: string;
+  available?: boolean;
 }
 
 export interface ICarsRepository {
   findByLicensePlate(license_place: string): Promise<Car>;
-  list(): Promise<Car[]>;
+  list({
+    brand,
+    category_id,
+    name,
+    available,
+  }: ICreateCarOptionalDTO): Promise<Car[]>;
   create({
     name,
     brand,

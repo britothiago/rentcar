@@ -1,6 +1,11 @@
 import { Car } from "../../entities/Car";
 import { ICarsRepository, ICreateCarDTO } from "../ICarsRepository";
-
+interface IRequest {
+  category_id?: string;
+  brand?: string;
+  name?: string;
+  available?: boolean;
+}
 export class CarsRepositoryInMemory implements ICarsRepository {
   cars: Car[];
 
@@ -8,12 +13,33 @@ export class CarsRepositoryInMemory implements ICarsRepository {
     this.cars = [];
   }
 
+  async listByCategory(category_id: string): Promise<Car[]> {
+    return this.cars.filter(
+      (car) => car.available && car.category_id === category_id
+    );
+  }
+
   async findByLicensePlate(license_place: string): Promise<Car> {
     return this.cars.find((car) => car.license_place === license_place);
   }
 
-  async list(): Promise<Car[]> {
-    return this.cars;
+  async list({
+    available,
+    brand,
+    category_id,
+    name,
+  }: IRequest): Promise<Car[]> {
+    if (available) return this.cars.filter((car) => car.available);
+    if (brand)
+      return this.cars.filter((car) => car.available && car.brand === brand);
+    if (category_id)
+      return this.cars.filter(
+        (car) => car.available && car.category_id === category_id
+      );
+    if (name)
+      return this.cars.filter((car) => car.available && car.name === name);
+
+    return this.cars.filter((car) => car.available);
   }
 
   async create({
@@ -22,6 +48,7 @@ export class CarsRepositoryInMemory implements ICarsRepository {
     category_id,
     daily_rate,
     description,
+    available,
     fine_amount,
     license_place,
   }: ICreateCarDTO): Promise<Car> {
@@ -31,6 +58,7 @@ export class CarsRepositoryInMemory implements ICarsRepository {
       brand,
       category_id,
       daily_rate,
+      available,
       description,
       fine_amount,
       license_place,

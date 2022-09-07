@@ -10,6 +10,7 @@ interface IRequest {
   fine_amount: number;
   brand: string;
   category_id: string;
+  available?: boolean;
 }
 
 @injectable()
@@ -25,6 +26,7 @@ export class CreateCarUseCase {
     daily_rate,
     description,
     fine_amount,
+    available = true,
     license_place,
     name,
   }: IRequest) {
@@ -38,6 +40,7 @@ export class CreateCarUseCase {
         daily_rate,
         description,
         fine_amount,
+        available,
         license_place,
         name,
       });

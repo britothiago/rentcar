@@ -2,6 +2,12 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../../../../database";
 import { Car } from "../../entities/Car";
 import { ICarsRepository, ICreateCarDTO } from "../ICarsRepository";
+interface IRequest {
+  category_id?: string;
+  brand?: string;
+  name?: string;
+  available?: boolean;
+}
 
 export class CarsRepository implements ICarsRepository {
   private repository: Repository<Car>;
@@ -14,12 +20,52 @@ export class CarsRepository implements ICarsRepository {
     return await this.repository.findOne({ where: { license_place } });
   }
 
-  async list(): Promise<Car[]> {
-    return await this.repository.find();
+  async list({
+    brand,
+    category_id,
+    name,
+    available,
+  }: IRequest): Promise<Car[]> {
+    if (name)
+      return this.repository.find({
+        where: {
+          name: name,
+          available: true,
+        },
+      });
+
+    if (available)
+      return this.repository.find({
+        where: {
+          available: available,
+        },
+      });
+
+    if (category_id)
+      return this.repository.find({
+        where: {
+          category_id: category_id,
+          available: true,
+        },
+      });
+    if (brand)
+      return this.repository.find({
+        where: {
+          brand: brand,
+          available: true,
+        },
+      });
+
+    return await this.repository.find({
+      where: {
+        available: true,
+      },
+    });
   }
 
   async create({
     name,
+    available,
     brand,
     category_id,
     daily_rate,
@@ -32,6 +78,7 @@ export class CarsRepository implements ICarsRepository {
       name,
       brand,
       category_id,
+      available,
       daily_rate,
       description,
       fine_amount,
