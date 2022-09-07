@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { ISpecificationRepository } from "../../repositories/ISpeciticationsRepository";
+import { ISpecificationRepository } from "../../repositories/ISpecificationsRepository";
 
 @injectable()
 export class ListSpecificationUseCase {

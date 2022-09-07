@@ -3,10 +3,10 @@ import { UsersRepository } from "../../module/accounts/repositories/implementati
 import { IUsersRepository } from "../../module/accounts/repositories/IUsersRepository";
 import { ICarsRepository } from "../../module/cars/repositories/ICarsRepository";
 import { ICategoriesRepository } from "../../module/cars/repositories/ICategoriesRepository";
-import { CarsRepository } from "../../module/cars/repositories/implementarions/CarsRepository";
-import { CategoriesRepository } from "../../module/cars/repositories/implementarions/CategoriesRepository";
-import { SpecificationRepository } from "../../module/cars/repositories/implementarions/SpecificationsRepository";
-import { ISpecificationRepository } from "../../module/cars/repositories/ISpeciticationsRepository";
+import { CarsRepository } from "../../module/cars/repositories/implementations/CarsRepository";
+import { CategoriesRepository } from "../../module/cars/repositories/implementations/CategoriesRepository";
+import { SpecificationRepository } from "../../module/cars/repositories/implementations/SpecificationsRepository";
+import { ISpecificationRepository } from "../../module/cars/repositories/ISpecificationsRepository";
 
 container.registerSingleton<ICategoriesRepository>(
   "CategoriesRepository",
