@@ -12,6 +12,9 @@ export class SpecificationRepository implements ISpecificationRepository {
   constructor() {
     this.repository = AppDataSource.getRepository(Specification);
   }
+  findByIds(id: string[]): Promise<Specification[]> {
+    throw new Error("Method not implemented.");
+  }
 
   async findByName(name: string): Promise<Specification> {
     const specification = await this.repository.findOne({ where: { name } });

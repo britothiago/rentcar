@@ -20,6 +20,10 @@ export class CarsRepository implements ICarsRepository {
     return await this.repository.findOne({ where: { license_place } });
   }
 
+  async findById(id: string): Promise<Car> {
+    return await this.repository.findOne({ where: { id } });
+  }
+
   async list({
     brand,
     category_id,

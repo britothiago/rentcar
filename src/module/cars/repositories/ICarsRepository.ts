@@ -19,6 +19,7 @@ interface ICreateCarOptionalDTO {
 }
 
 export interface ICarsRepository {
+  findById(id: string): Promise<Car>;
   findByLicensePlate(license_place: string): Promise<Car>;
   list({
     brand,
