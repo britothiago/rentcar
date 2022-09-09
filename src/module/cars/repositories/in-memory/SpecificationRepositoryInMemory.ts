@@ -34,7 +34,11 @@ export class SpecificationRepositoryInMemory
     return this.specifications;
   }
 
-  async findByIds(id: string[]): Promise<Specification[]> {
-    throw new Error("Method not implemented.");
+  async findByIds(ids: Specification[]): Promise<Specification[]> {
+    return this.specifications.filter((spec) => {
+      return ids.map((id) => {
+        if (id.id === spec.id) return id;
+      });
+    });
   }
 }

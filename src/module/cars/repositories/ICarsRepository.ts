@@ -1,5 +1,5 @@
 import { Car } from "../entities/Car";
-
+import { Specification } from "../entities/Specification";
 export interface ICreateCarDTO {
   name: string;
   description: string;
@@ -9,6 +9,8 @@ export interface ICreateCarDTO {
   brand: string;
   category_id: string;
   available?: boolean;
+  specifications?: Specification[];
+  id?: string;
 }
 
 interface ICreateCarOptionalDTO {
@@ -35,5 +37,6 @@ export interface ICarsRepository {
     description,
     fine_amount,
     license_place,
+    specifications,
   }: ICreateCarDTO): Promise<Car>;
 }

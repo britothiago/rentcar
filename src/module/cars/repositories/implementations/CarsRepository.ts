@@ -81,6 +81,8 @@ export class CarsRepository implements ICarsRepository {
     description,
     fine_amount,
     license_place,
+    specifications,
+    id,
   }: ICreateCarDTO): Promise<Car> {
     const car = new Car();
     Object.assign(car, {
@@ -92,6 +94,8 @@ export class CarsRepository implements ICarsRepository {
       description,
       fine_amount,
       license_place,
+      specifications,
+      id,
     });
     await this.repository.save(car);
     return car;
