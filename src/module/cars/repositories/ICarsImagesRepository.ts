@@ -1,5 +1,9 @@
 import { CarImage } from "../entities/CarImage";
 
+interface IRequest {
+  car_id: string;
+  image_name: string;
+}
 export interface ICarsImagesRepository {
-  create(id: string, image_name: string): Promise<CarImage>;
+  create({ car_id, image_name }: IRequest): Promise<CarImage>;
 }

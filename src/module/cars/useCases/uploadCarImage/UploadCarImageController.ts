@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { sendFilesToAWS } from "../../../../config/aws";
+import { AppError } from "../../../../errors/AppError";
 import { UploadCarImageUseCase } from "./UploadCarImageUseCase";
 
 interface IFiles {
@@ -14,19 +15,16 @@ export class UploadCarImageController {
     const { id } = request.params;
     const images = request.files as IFiles[];
 
-    let filesNames: string[];
-
     Promise.all(images.map(async (file) => await sendFilesToAWS(file)))
       .then(async (urls) => {
         await repository.execute({
           id,
           image_name: urls,
         });
+        return response.status(201).send();
       })
       .catch((err) => {
-        return response.status(400).send();
+        throw new AppError(`Bad request | ${err}`);
       });
-
-    return response.status(201).send();
   }
 }

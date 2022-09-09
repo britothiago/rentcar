@@ -14,16 +14,15 @@ export class UploadCarImageUseCase {
     private carsImagesRepository: ICarsImagesRepository
   ) {}
 
-  async execute({ id, image_name }: IRequest): Promise<void> {
-    const car = new CarImage();
-    Object.assign();
-    console.log(
-      "🚀 ~ file: UploadCarImageUseCase.ts ~ line 17 ~ UploadCarImageUseCase ~ execute ~ image_name",
-      image_name
+  async execute({ id, image_name }: IRequest) {
+    const cars = image_name.map(
+      async (image) =>
+        await this.carsImagesRepository.create({
+          car_id: id,
+          image_name: image,
+        })
     );
 
-    image_name.map(
-      async (image) => await this.carsImagesRepository.create(id, image)
-    );
+    return cars;
   }
 }
