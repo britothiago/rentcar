@@ -1,4 +1,5 @@
 import { inject, injectable } from "tsyringe";
+import { CarImage } from "../../entities/CarImage";
 import { ICarsImagesRepository } from "../../repositories/ICarsImagesRepository";
 
 interface IRequest {
@@ -14,6 +15,8 @@ export class UploadCarImageUseCase {
   ) {}
 
   async execute({ id, image_name }: IRequest): Promise<void> {
+    const car = new CarImage();
+    Object.assign();
     console.log(
       "🚀 ~ file: UploadCarImageUseCase.ts ~ line 17 ~ UploadCarImageUseCase ~ execute ~ image_name",
       image_name
