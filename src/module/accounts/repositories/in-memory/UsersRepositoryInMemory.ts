@@ -9,11 +9,11 @@ export class UsersRepositoryInMemory implements IUsersRepository {
   }
 
   async findByEmail(email: string): Promise<User> {
-    return this.users.find((user) => (user.email = email));
+    return this.users.find((user) => user.email === email);
   }
 
   async findById(id: string): Promise<User> {
-    return this.users.find((user) => (user.id = id));
+    return this.users.find((user) => user.id === id);
   }
 
   async list(): Promise<User[]> {

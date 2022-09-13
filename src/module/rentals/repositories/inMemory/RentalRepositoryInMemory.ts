@@ -7,6 +7,7 @@ interface IRequest {
   start_date: Date;
   expect_return_date: Date;
   total: number;
+  end_date: Date;
 }
 
 export class RentalRepositoryInMemory implements IRentalRepository {
@@ -16,12 +17,16 @@ export class RentalRepositoryInMemory implements IRentalRepository {
     this.rental = [];
   }
 
-  async findByUser(id: string): Promise<Rental> {
-    return this.rental.find((rental) => rental.user_id === id);
+  async findByOpenRentalToUser(id: string): Promise<Rental> {
+    return this.rental.find(
+      (rental) => rental.user_id === id && !rental.end_date
+    );
   }
 
-  async findByCar(id: string): Promise<Rental> {
-    return this.rental.find((rental) => rental.car_id === id);
+  async findByOpenRentalToCar(id: string): Promise<Rental> {
+    return this.rental.find(
+      (rental) => rental.car_id === id && !rental.end_date
+    );
   }
 
   async create({
@@ -30,6 +35,7 @@ export class RentalRepositoryInMemory implements IRentalRepository {
     start_date,
     total,
     user_id,
+    end_date = null,
   }: IRequest): Promise<Rental> {
     const rental = new Rental();
     Object.assign(rental, {
@@ -38,6 +44,7 @@ export class RentalRepositoryInMemory implements IRentalRepository {
       start_date,
       total,
       user_id,
+      end_date,
     });
     this.rental.push(rental);
     return rental;

@@ -1,84 +1,86 @@
-import { UsersRepositoryInMemory } from "../../accounts/repositories/in-memory/UsersRepositoryInMemory";
-import { CreateUserUseCase } from "../../accounts/useCases/createUser/CreateUserUseCase";
-import { CarsRepositoryInMemory } from "../../cars/repositories/in-memory/CarsRepositoryInMemory";
-import { CreateCarUseCase } from "../../cars/useCases/createCar/createCarUseCase";
+import dayjs from "dayjs";
+import { AppError } from "../../../errors/AppError";
+import { IDateProvider } from "../../../shared/providers/DateProvider/IDateProvider";
+import { DayjsDateProvider } from "../../../shared/providers/DateProvider/implementations/DayjsDateProvider";
 import { RentalRepositoryInMemory } from "../repositories/inMemory/RentalRepositoryInMemory";
 import { CreateRentalUseCase } from "./CreateRentalUseCase";
 
-interface IUserResponse {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  driver_license: string;
-  avatar?: string;
-}
-
-interface ICarResponse {
-  id: string;
-  name: string;
-  description: string;
-  daily_rate: number;
-  license_place: string;
-  fine_amount: number;
-  brand: string;
-  category_id: string;
-  available?: boolean;
-}
-
 let createRentalUseCase: CreateRentalUseCase;
 let rentalRepositoryInMemory: RentalRepositoryInMemory;
-let createCarUseCase: CreateCarUseCase;
-let carsRepositoryInMemory: CarsRepositoryInMemory;
-let createUserUseCase: CreateUserUseCase;
-let usersRepositoryInMemory: UsersRepositoryInMemory;
+let dayJsProvider: DayjsDateProvider;
 
 describe("create a new rental", () => {
+  const START_DATE_HOUR = dayjs().add(2, "day").toDate();
   beforeEach(() => {
     rentalRepositoryInMemory = new RentalRepositoryInMemory();
-    carsRepositoryInMemory = new CarsRepositoryInMemory();
-    usersRepositoryInMemory = new UsersRepositoryInMemory();
-    createUserUseCase = new CreateUserUseCase(usersRepositoryInMemory);
-    createCarUseCase = new CreateCarUseCase(carsRepositoryInMemory);
-    createRentalUseCase = new CreateRentalUseCase(rentalRepositoryInMemory);
+    dayJsProvider = new DayjsDateProvider();
+    createRentalUseCase = new CreateRentalUseCase(
+      rentalRepositoryInMemory,
+      dayJsProvider
+    );
   });
 
   test("should be able to create a new rental", async () => {
-    const user = (await createUserUseCase.execute({
-      driver_license: "1234",
-      email: "john.doe@test.com",
-      name: "John Doe",
-      password: "123",
-    })) as IUserResponse;
-    console.log(
-      "🚀 ~ file: CreateRentalUseCase.spec.ts ~ line 53 ~ test ~ user",
-      user
-    );
-
-    const car = (await createCarUseCase.execute({
-      name: "Honda FIT",
-      description: "Honda FIT 2008 automático",
-      daily_rate: 100,
-      license_place: "ABC12D4",
-      fine_amount: 130,
-      brand: "Honda",
-      category_id: "670bd10c-f30e-4f42-af93-9f1a8e696045",
-    })) as ICarResponse;
-    console.log(
-      "🚀 ~ file: CreateRentalUseCase.spec.ts ~ line 64 ~ test ~ car",
-      car
-    );
-
     const rental = await createRentalUseCase.execute({
-      car_id: car.id,
-      expect_return_date: new Date(),
-      start_date: new Date(),
+      car_id: "123",
+      expect_return_date: new Date("2022-10-19 17:30"),
+      start_date: START_DATE_HOUR,
       total: 100,
-      user_id: user.id,
+      user_id: "123",
     });
 
-    console.log(rental);
-
     return expect(rental).toHaveProperty("id");
+  });
+
+  test("should be not able to create a new rental for an existent rental car", async () => {
+    await createRentalUseCase.execute({
+      car_id: "123",
+      expect_return_date: new Date("2022-10-19 17:30"),
+      start_date: START_DATE_HOUR,
+      total: 100,
+      user_id: "123",
+    });
+
+    return expect(async () => {
+      await createRentalUseCase.execute({
+        car_id: "123",
+        expect_return_date: new Date(),
+        start_date: START_DATE_HOUR,
+        total: 110,
+        user_id: "124",
+      });
+    }).rejects.toBeInstanceOf(AppError);
+  });
+
+  test("should be not able to create a new rental for an existent rental user", async () => {
+    await createRentalUseCase.execute({
+      car_id: "123",
+      expect_return_date: new Date("2022-10-19 17:30"),
+      start_date: START_DATE_HOUR,
+      total: 100,
+      user_id: "123",
+    });
+
+    return expect(async () => {
+      await createRentalUseCase.execute({
+        car_id: "124",
+        expect_return_date: new Date("2022-10-19 17:30"),
+        start_date: START_DATE_HOUR,
+        total: 110,
+        user_id: "123",
+      });
+    }).rejects.toBeInstanceOf(AppError);
+  });
+
+  test("should be not able to create a new rental with minimum start date time", async () => {
+    return expect(async () => {
+      await createRentalUseCase.execute({
+        car_id: "124",
+        expect_return_date: new Date("2022-10-19 17:30"),
+        start_date: new Date("2022-09-13 17:30"),
+        total: 110,
+        user_id: "123",
+      });
+    }).rejects.toBeInstanceOf(AppError);
   });
 });
