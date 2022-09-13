@@ -1,5 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../../errors/AppError";
+import { Car } from "../../entities/Car";
 import { ICarsRepository } from "../../repositories/ICarsRepository";
 
 interface IRequest {
@@ -29,7 +30,7 @@ export class CreateCarUseCase {
     available = true,
     license_place,
     name,
-  }: IRequest) {
+  }: IRequest): Promise<Car> {
     const isCarsExists = await this.carsRepository.findByLicensePlate(
       license_place
     );
