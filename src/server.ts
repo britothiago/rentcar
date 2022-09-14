@@ -16,6 +16,7 @@ import swaggerFile from "./swagger.json";
 import { authenticateRoutes } from "./routes/authenticate.routes";
 import { AppError } from "./errors/AppError";
 import { carsRoutes } from "./routes/cars.routes";
+import { rentalsRoute } from "./routes/rentals.routes";
 
 const app = express();
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use("/categories", categoriesRoutes);
 app.use("/specifications", specificationsRoutes);
 app.use("/accounts", accountsRoutes);
 app.use("/cars", carsRoutes);
+app.use("/rentals", rentalsRoute);
 
 app.use(
   (

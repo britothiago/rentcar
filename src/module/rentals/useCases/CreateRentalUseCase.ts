@@ -16,8 +16,9 @@ interface IRequest {
 @injectable()
 export class CreateRentalUseCase {
   constructor(
-    //@inject()
+    @inject("RentalRepository")
     private rentalRepository: IRentalRepository,
+    @inject("DayjsDateProvider")
     private dateProvider: IDateProvider
   ) {}
 
@@ -33,15 +34,27 @@ export class CreateRentalUseCase {
       start_date
     );
 
-    if (getDateDifferenceInHours < 24)
-      throw new AppError("Start date must be 24 hours higher the actual date");
+    if (getDateDifferenceInHours < 24) {
+      throw new AppError(
+        `Start date must be 24 hours higher the actual date and ${getDateDifferenceInHours} is not valid`
+      );
+    }
+
+    const getDateDifferenceInHoursBetweenStartAndEndDate =
+      this.dateProvider.compareInHours(start_date, expect_return_date);
+    if (getDateDifferenceInHoursBetweenStartAndEndDate < 48) {
+      throw new AppError(
+        `Expected date must be 48 hours higher the started date and ${getDateDifferenceInHoursBetweenStartAndEndDate} is not valid`
+      );
+    }
 
     const isCarRentalExists = await this.rentalRepository.findByOpenRentalToCar(
       car_id
     );
 
-    if (isCarRentalExists)
+    if (isCarRentalExists) {
       throw new AppError("Already exists a rental for this car");
+    }
 
     const isUserAlreadyRentAnotherCar =
       await this.rentalRepository.findByOpenRentalToUser(user_id);

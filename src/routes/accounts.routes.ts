@@ -14,13 +14,14 @@ const updateUserAvatarController = new UpdateUserAvatarController();
 
 const uploadAvatar = multer(upload.upload("./tmp/avatar"));
 
-accountsRoutes.use(isAuthenticated);
-accountsRoutes.get("/", isAdmin, listUsersController.handle);
 accountsRoutes.post(
   "/",
   uploadAvatar.single("avatar"),
   createUserController.handle
 );
+accountsRoutes.use(isAuthenticated);
+accountsRoutes.get("/", isAdmin, listUsersController.handle);
+
 accountsRoutes.patch(
   "/avatar",
   uploadAvatar.single("avatar"),
