@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   port: 5000,
   username: "docker",
   password: "ignite",
-  database: "rentcar",
+  database: process.env.NODE_ENV === "test" ? "rentcar_qa" : "rentcar",
   entities: [Category, Specification, User, Car, CarImage, Rental],
   migrations: ["./src/database/migrations/*.ts"],
   subscribers: [],
@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
 
 AppDataSource.initialize()
   .then(() => {
-    console.log("Data Source has been initialized!");
+    console.log(`Data Source ${process.env.NODE_ENV} has been initialized!`);
   })
   .catch((err) => {
     console.error("Error during Data Source initialization", err);
