@@ -39,4 +39,5 @@ export interface ICarsRepository {
     license_place,
     specifications,
   }: ICreateCarDTO): Promise<Car>;
+  updateAvailableStatusCar(id: string, status: boolean): Promise<void>;
 }

@@ -18,4 +18,11 @@ export interface IRentalRepository {
     total,
     user_id,
   }: ICreateRentalDTO): Promise<Rental>;
+  finishedRentalCar(
+    user_id: string,
+    expected_return_date: Date,
+    end_date: Date,
+    total: number
+  ): Promise<void>;
+  findByUserId(user_id: string): Promise<Rental>;
 }

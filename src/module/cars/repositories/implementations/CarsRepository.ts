@@ -16,6 +16,15 @@ export class CarsRepository implements ICarsRepository {
     this.repository = AppDataSource.getRepository(Car);
   }
 
+  async updateAvailableStatusCar(id: string, status: boolean): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .update(Car)
+      .set({ available: status })
+      .where("id = :id", { id })
+      .execute();
+  }
+
   async findByLicensePlate(license_place: string): Promise<Car> {
     return await this.repository.findOne({ where: { license_place } });
   }

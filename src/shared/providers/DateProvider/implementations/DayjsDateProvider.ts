@@ -5,6 +5,15 @@ import { IDateProvider } from "../IDateProvider";
 dayjs.extend(utc);
 
 export class DayjsDateProvider implements IDateProvider {
+  compareDateIfSameDays(
+    devolution_date: Date,
+    expected_return_date: Date
+  ): number {
+    return (
+      dayjs(devolution_date).get("D") - dayjs(expected_return_date).get("D")
+    );
+  }
+
   convertToUTC(date: Date): String {
     return dayjs(date).utc().local().format();
   }

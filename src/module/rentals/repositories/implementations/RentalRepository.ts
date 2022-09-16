@@ -18,6 +18,28 @@ export class RentalRepository implements IRentalRepository {
   constructor() {
     this.repository = AppDataSource.getRepository(Rental);
   }
+  async finishedRentalCar(
+    user_id: string,
+    expected_return_date: Date,
+    end_date: Date,
+    total: number
+  ): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .update(Rental)
+      .set({ end_date: end_date, total: total })
+      .where("user_id = :user_id", {
+        user_id,
+      })
+      .where("end_date = :isNull", { isNull: null })
+      .execute();
+  }
+
+  async findByUserId(user_id: string): Promise<Rental> {
+    return await this.repository.findOne({
+      where: { user_id, end_date: null },
+    });
+  }
 
   async findByOpenRentalToUser(id: string): Promise<Rental> {
     return await this.repository.findOne({ where: { user_id: id } });

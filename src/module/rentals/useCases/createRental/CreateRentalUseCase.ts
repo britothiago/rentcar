@@ -1,16 +1,16 @@
 import dayjs from "dayjs";
 import { inject, injectable } from "tsyringe";
-import { AppError } from "../../../errors/AppError";
-import { IDateProvider } from "../../../shared/providers/DateProvider/IDateProvider";
-import { Rental } from "../entities/Rental";
-import { IRentalRepository } from "../repositories/IRentalRepository";
+import { AppError } from "../../../../errors/AppError";
+import { IDateProvider } from "../../../../shared/providers/DateProvider/IDateProvider";
+import { ICarsRepository } from "../../../cars/repositories/ICarsRepository";
+import { Rental } from "../../entities/Rental";
+import { IRentalRepository } from "../../repositories/IRentalRepository";
 
 interface IRequest {
   car_id: string;
   user_id: string;
   start_date: Date;
   expect_return_date: Date;
-  total: number;
 }
 
 @injectable()
@@ -19,14 +19,15 @@ export class CreateRentalUseCase {
     @inject("RentalRepository")
     private rentalRepository: IRentalRepository,
     @inject("DayjsDateProvider")
-    private dateProvider: IDateProvider
+    private dateProvider: IDateProvider,
+    @inject("CarsRepository")
+    private carsRepository: ICarsRepository
   ) {}
 
   async execute({
     car_id,
     expect_return_date,
     start_date,
-    total,
     user_id,
   }: IRequest): Promise<Rental> {
     const getDateDifferenceInHours = this.dateProvider.compareInHours(
@@ -63,13 +64,23 @@ export class CreateRentalUseCase {
       throw new AppError("Already exists a rental for this user");
     }
 
+    const car = await this.carsRepository.findById(car_id);
+
+    const totalDays = this.dateProvider.compareDateIfSameDays(
+      expect_return_date,
+      start_date
+    );
+
     const rental = await this.rentalRepository.create({
       car_id,
       expect_return_date,
       start_date,
-      total,
+      total: car.daily_rate * totalDays,
       user_id,
     });
+
+    this.carsRepository.updateAvailableStatusCar(car_id, false);
+
     return rental;
   }
 }

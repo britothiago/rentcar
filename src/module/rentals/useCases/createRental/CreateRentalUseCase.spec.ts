@@ -1,22 +1,26 @@
 import dayjs from "dayjs";
-import { AppError } from "../../../errors/AppError";
-import { IDateProvider } from "../../../shared/providers/DateProvider/IDateProvider";
-import { DayjsDateProvider } from "../../../shared/providers/DateProvider/implementations/DayjsDateProvider";
-import { RentalRepositoryInMemory } from "../repositories/inMemory/RentalRepositoryInMemory";
+import { AppError } from "../../../../errors/AppError";
+import { IDateProvider } from "../../../../shared/providers/DateProvider/IDateProvider";
+import { DayjsDateProvider } from "../../../../shared/providers/DateProvider/implementations/DayjsDateProvider";
+import { CarsRepositoryInMemory } from "../../../cars/repositories/in-memory/CarsRepositoryInMemory";
+import { RentalRepositoryInMemory } from "../../repositories/inMemory/RentalRepositoryInMemory";
 import { CreateRentalUseCase } from "./CreateRentalUseCase";
 
 let createRentalUseCase: CreateRentalUseCase;
 let rentalRepositoryInMemory: RentalRepositoryInMemory;
 let dayJsProvider: DayjsDateProvider;
+let carsRepositoryInMemory: CarsRepositoryInMemory;
 
 describe("create a new rental", () => {
   const START_DATE_HOUR = dayjs().add(2, "day").toDate();
   beforeEach(() => {
     rentalRepositoryInMemory = new RentalRepositoryInMemory();
     dayJsProvider = new DayjsDateProvider();
+    carsRepositoryInMemory = new CarsRepositoryInMemory();
     createRentalUseCase = new CreateRentalUseCase(
       rentalRepositoryInMemory,
-      dayJsProvider
+      dayJsProvider,
+      carsRepositoryInMemory
     );
   });
 
