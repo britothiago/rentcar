@@ -5,6 +5,10 @@ import { IDateProvider } from "../IDateProvider";
 dayjs.extend(utc);
 
 export class DayjsDateProvider implements IDateProvider {
+  addMin(minutes: number): Date {
+    return dayjs().add(minutes, "minutes").toDate();
+  }
+
   addDays(days: number): Date {
     return dayjs().add(days, "days").toDate();
   }

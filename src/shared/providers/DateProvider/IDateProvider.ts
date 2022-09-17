@@ -6,4 +6,5 @@ export interface IDateProvider {
     expected_return_date: Date
   ): number;
   addDays(days: number): Date;
+  addMin(minutes: number): Date;
 }
