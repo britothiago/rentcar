@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "../module/accounts/entities/User";
+import { UserTokens } from "../module/accounts/entities/UserTokens";
 import { Car } from "../module/cars/entities/Car";
 import { CarImage } from "../module/cars/entities/CarImage";
 import { Category } from "../module/cars/entities/Category";
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
   username: "docker",
   password: "ignite",
   database: process.env.NODE_ENV === "test" ? "rentcar_qa" : "rentcar",
-  entities: [Category, Specification, User, Car, CarImage, Rental],
+  entities: [Category, Specification, User, Car, CarImage, Rental, UserTokens],
   migrations: ["./src/database/migrations/*.ts"],
   subscribers: [],
 });

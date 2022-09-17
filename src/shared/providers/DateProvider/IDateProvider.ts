@@ -5,4 +5,5 @@ export interface IDateProvider {
     devolutionDate: Date,
     expected_return_date: Date
   ): number;
+  addDays(days: number): Date;
 }

@@ -5,6 +5,10 @@ import { IDateProvider } from "../IDateProvider";
 dayjs.extend(utc);
 
 export class DayjsDateProvider implements IDateProvider {
+  addDays(days: number): Date {
+    return dayjs().add(days, "days").toDate();
+  }
+
   compareDateIfSameDays(
     devolution_date: Date,
     expected_return_date: Date
