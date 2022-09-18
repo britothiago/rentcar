@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { inject, injectable } from "tsyringe";
 import { v4 as uuid } from "uuid";
 import { AppError } from "../../../../errors/AppError";
@@ -5,7 +6,6 @@ import { IDateProvider } from "../../../../shared/providers/DateProvider/IDatePr
 import { IMailProvider } from "../../../../shared/providers/MailProvider/IMailProvider";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 import { IUsersTokenRepository } from "../../repositories/IUsersTokenRepository";
-
 @injectable()
 export class SendForgotPasswordUseCase {
   constructor(
@@ -21,6 +21,14 @@ export class SendForgotPasswordUseCase {
 
   async execute(email: string) {
     const user = await this.usersRepository.findByEmail(email);
+    const templatePath = resolve(
+      __dirname,
+      "..",
+      "..",
+      "views",
+      "emails",
+      "forgotPassword.hbs"
+    );
     if (!user) throw new AppError("User not found", 401);
 
     const token = uuid();
@@ -30,10 +38,16 @@ export class SendForgotPasswordUseCase {
       expires_date: this.dayjsDateProvider.addMin(15),
     });
 
+    const variables = {
+      name: user.name,
+      link: `${process.env.BASE_URL_RESET_PASSWORD}/${token}`,
+    };
+
     await this.etherealMailProvider.sendMail(
       email,
       "Recuperação de Senha",
-      `O link para o reset é ${token}`
+      variables,
+      templatePath
     );
   }
 }
